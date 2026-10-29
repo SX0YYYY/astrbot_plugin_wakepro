@@ -408,6 +408,12 @@
                     "at",
                     "reply"
                 ]
+            },
+            "friend_message": {
+                "description": "私聊也启用消息防抖",
+                "hint": "开启后，私聊（FriendMessage）中连续消息也会合并；默认关闭，不影响现有行为。",
+                "type": "bool",
+                "default": false
             }
         }
     },

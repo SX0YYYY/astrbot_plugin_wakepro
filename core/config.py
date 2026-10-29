@@ -196,6 +196,7 @@ class DebounceConfig(ConfigNode):
     listen_seconds: float
     max_merge_count: int
     message_types: list[str]
+    friend_message: bool
 
 
 class PluginConfig(ConfigNode):

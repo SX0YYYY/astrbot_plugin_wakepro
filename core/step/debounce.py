@@ -39,6 +39,8 @@ class DebounceStep(BaseStep):
         )
 
         if not pending:
+            if self._should_open_friend_window(ctx):
+                await self.activate_window(ctx)
             return StepResult()
         if self._contains_gif(pending.chain) or self._contains_gif(ctx.chain):
             return StepResult(msg="检测到 GIF，跳过消息合并")
@@ -68,6 +70,14 @@ class DebounceStep(BaseStep):
         else:
             msg = f"已合并同用户 {merged_count} 条连续消息，达到上限后立即发起请求"
         return StepResult(wake=True, msg=msg)
+
+    def _should_open_friend_window(self, ctx: WakeContext) -> bool:
+        """私聊：框架已判定唤醒时，补一次防抖开窗（默认关闭）。"""
+        if not bool(getattr(self.cfg, "friend_message", False)):
+            return False
+        if ctx.gid:
+            return False
+        return bool(getattr(ctx.event, "is_at_or_wake_command", False))
 
     async def activate_window(self, ctx: WakeContext) -> None:
         if self.cfg.listen_seconds <= 0 or not ctx.uid:
